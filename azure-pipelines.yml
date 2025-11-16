@@ -1,0 +1,24 @@
+trigger:
+- master
+
+pool:
+  name: aditya  # Replace with your self-hosted agent pool name
+
+steps:
+# Step 1: Install dependencies
+- script: |
+    python -m venv venv
+    source venv/bin/activate
+    pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install Python dependencies'
+
+# Step 2: Build Docker image locally
+- script: |
+    docker build -t flask-app .
+  displayName: 'Build Docker image locally'
+
+# Step 3: Run Flask app inside Docker container locally
+- script: |
+    docker run -d -p 5000:5000 flask-app
+  displayName: 'Run Flask app in Docker container'
